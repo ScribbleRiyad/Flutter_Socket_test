@@ -15,8 +15,9 @@ class _ChatScreenState extends State<ChatScreen> {
   late IO.Socket socket;
   @override
   void initState() {
- socket =IO.io('http://localhost:4000', IO.OptionBuilder().setTransports(['websocket',]).disableAutoConnect().build());
+ socket =IO.io('http://localhost:4000', IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build());
  socket.connect();
+ setUpScoketListener();
     super.initState();
   }
   @override
@@ -31,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
               itemBuilder:(context, index){
               
               return const MessageItem(
-                sendByMe: true,
+                sendByMe: false,
               );
             },),
           ),),
@@ -77,7 +78,21 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-  void sendMessage(String text){}
+  void sendMessage(String text){
+    var messageJson ={
+      "message": text,
+      "sendByMe":socket.id,
+
+    };
+    socket.emit('message', messageJson);
+  }
+  
+ 
+    socket.on('message-recieve',(data){
+      print(data);
+
+    });
+  }
 }
 class MessageItem extends StatelessWidget {
   const MessageItem({
