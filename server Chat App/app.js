@@ -7,4 +7,11 @@ const server  = app.listen(Port,()=>{
 const io = require('socket.io')(server);
 io.on('connection', (socket) =>{
     console.log('a user connected', socket.id);
+    socket.or('disconnect', () =>{
+        console.log('user disconnected', socket.id);
+        
+    });
+    socket.on('message', (data) =>{
+ console.log(data);
+    });
 });
