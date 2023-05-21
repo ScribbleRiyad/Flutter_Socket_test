@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 class ChatScreen extends StatefulWidget {
   const ChatScreen
   ({super.key});
@@ -11,6 +12,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageInputController = TextEditingController();
+  late IO.Socket socket;
+  @override
+  void initState() {
+ socket =IO.io('http://localhost:4000', IO.OptionBuilder().setTransports(['websocket',]).disableAutoConnect().build());
+ socket.connect();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
